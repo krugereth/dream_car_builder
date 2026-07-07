@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>My Builds | BuildSpec Garage</title>
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a href="/" class="logo">BuildSpec Garage</a>
+
+      <div class="nav-links">
+        <a href="/builds">Builds</a>
+        <a href="/builds/new">New Build</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <div>
+        <p class="eyebrow">Garage</p>
+        <h1>My car builds</h1>
+      </div>
+
+      <a href="/builds/new" class="btn primary">Create build</a>
+    </div>
+
+    <% if (builds.length === 0) { %>
+      <div class="feature-card">
+        <h3>No builds yet</h3>
+        <p>Create your first dream car build to start tracking parts, cost, and progress.</p>
+      </div>
+    <% } else { %>
+      <section class="build-list">
+        <% builds.forEach((build) => { %>
+          <article class="build-card">
+            <h3><%= build.build_name %></h3>
+
+            <p class="car-name">
+              <%= build.year || "Year not set" %>
+              <%= build.make %>
+              <%= build.model %>
+            </p>
+
+            <% if (build.goal) { %>
+              <p><%= build.goal %></p>
+            <% } %>
+
+            <div class="build-meta">
+              <span>Budget: $<%= build.budget || 0 %></span>
+            </div>
+
+            <a href="/builds/<%= build.id %>" class="btn secondary">View details</a>
+          </article>
+        <% }) %>
+      </section>
+    <% } %>
+  </main>
+</body>
+</html>
