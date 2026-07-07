@@ -123,5 +123,5 @@ app.get("/builds/:id", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`BuildSpec Garage running on http://localhost:${PORT}`);
+  console.log(`AutoBuilder running on http://localhost:${PORT}`);
 });
