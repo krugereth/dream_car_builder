@@ -267,3 +267,29 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+.build-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.build-actions form {
+  margin: 0;
+}
+
+button.btn {
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.danger {
+  background: #7f1d1d;
+  color: #fef2f2;
+}
+
+.danger:hover {
+  background: #991b1b;
+}

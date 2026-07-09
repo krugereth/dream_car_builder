@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Edit <%= build.build_name %> | BuildSpec Garage</title>
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a href="/" class="logo">BuildSpec Garage</a>
+
+      <div class="nav-links">
+        <a href="/builds">Builds</a>
+        <a href="/builds/new">New Build</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <a href="/builds/<%= build.id %>" class="back-link">
+      ← Back to build
+    </a>
+
+    <p class="eyebrow">Edit project</p>
+    <h1>Edit car build</h1>
+
+    <form
+      action="/builds/<%= build.id %>?_method=PUT"
+      method="POST"
+      class="form-card"
+    >
+      <div class="form-group">
+        <label for="build_name">Build name</label>
+
+        <input
+          type="text"
+          id="build_name"
+          name="build_name"
+          value="<%= build.build_name %>"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="make">Make</label>
+
+          <input
+            type="text"
+            id="make"
+            name="make"
+            value="<%= build.make %>"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="model">Model</label>
+
+          <input
+            type="text"
+            id="model"
+            name="model"
+            value="<%= build.model %>"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="year">Year</label>
+
+          <input
+            type="number"
+            id="year"
+            name="year"
+            value="<%= build.year || '' %>"
+            min="1950"
+            max="2035"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="budget">Budget</label>
+
+          <input
+            type="number"
+            id="budget"
+            name="budget"
+            value="<%= build.budget || '' %>"
+            min="0"
+            step="0.01"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="goal">Build goal</label>
+
+        <input
+          type="text"
+          id="goal"
+          name="goal"
+          value="<%= build.goal || '' %>"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+
+        <textarea
+          id="notes"
+          name="notes"
+          rows="5"
+        ><%= build.notes || '' %></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary">
+          Save changes
+        </button>
+
+        <a
+          href="/builds/<%= build.id %>"
+          class="btn secondary"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

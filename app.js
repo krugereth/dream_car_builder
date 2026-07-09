@@ -149,3 +149,82 @@ app.get("/builds/:id/edit", (req, res) => {
     res.render("builds/edit", { build });
   });
 });
+
+// Update a build
+app.put("/builds/:id", (req, res) => {
+  const buildId = req.params.id;
+
+  const {
+    build_name,
+    make,
+    model,
+    year,
+    goal,
+    budget,
+    notes,
+  } = req.body;
+
+  if (!build_name || !make || !model) {
+    return res.status(400).send("Build name, make, and model are required.");
+  }
+
+  const sql = `
+    UPDATE builds
+    SET
+      build_name = ?,
+      make = ?,
+      model = ?,
+      year = ?,
+      goal = ?,
+      budget = ?,
+      notes = ?
+    WHERE id = ?
+  `;
+
+  const values = [
+    build_name,
+    make,
+    model,
+    year || null,
+    goal || null,
+    budget || null,
+    notes || null,
+    buildId,
+  ];
+
+  db.run(sql, values, function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error while updating build.");
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).send("Build not found.");
+    }
+
+    res.redirect(`/builds/${buildId}`);
+  });
+});
+
+// Delete a build
+app.delete("/builds/:id", (req, res) => {
+  const buildId = req.params.id;
+
+  const sql = `
+    DELETE FROM builds
+    WHERE id = ?
+  `;
+
+  db.run(sql, [buildId], function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error while deleting build.");
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).send("Build not found.");
+    }
+
+    res.redirect("/builds");
+  });
+});
