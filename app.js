@@ -125,3 +125,27 @@ app.get("/builds/:id", (req, res) => {
 app.listen(PORT, () => {
   console.log(`AutoBuilder running on http://localhost:${PORT}`);
 });
+
+// Show form to edit a build
+app.get("/builds/:id/edit", (req, res) => {
+  const buildId = req.params.id;
+
+  const sql = `
+    SELECT *
+    FROM builds
+    WHERE id = ?
+  `;
+
+  db.get(sql, [buildId], (err, build) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error while loading build.");
+    }
+
+    if (!build) {
+      return res.status(404).send("Build not found.");
+    }
+
+    res.render("builds/edit", { build });
+  });
+});
