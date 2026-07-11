@@ -295,3 +295,101 @@ button.btn {
 .danger:hover {
   background: #991b1b;
 }
+
+.form-group select {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #0b0f19;
+  color: #f8fafc;
+  font-size: 16px;
+}
+
+.form-group select:focus {
+  outline: 2px solid #f97316;
+  border-color: #f97316;
+}
+
+.modifications-section {
+  margin-top: 48px;
+}
+
+.build-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: bold;
+  color: #f97316;
+  margin-bottom: 0;
+}
+
+.modification-list {
+  display: grid;
+  gap: 18px;
+}
+
+.modification-card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.modification-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.modification-header h3 {
+  margin: 6px 0;
+}
+
+.category {
+  color: #f97316;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.modification-cost {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.status-badge {
+  height: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.status-planned {
+  background: #334155;
+}
+
+.status-purchased {
+  background: #854d0e;
+}
+
+.status-installed {
+  background: #166534;
+}
+
+@media (max-width: 750px) {
+  .build-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .modification-header {
+    flex-direction: column;
+  }
+}

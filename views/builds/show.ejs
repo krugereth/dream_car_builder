@@ -57,6 +57,105 @@
       <p><%= build.notes || "No notes added yet." %></p>
     </section>
 
+    <section class="modifications-section">
+      <div class="page-header">
+        <div>
+          <p class="eyebrow">Build parts</p>
+          <h2>Modifications</h2>
+        </div>
+
+        <a
+          href="/builds/<%= build.id %>/modifications/new"
+          class="btn primary"
+        >
+          Add modification
+        </a>
+      </div>
+
+      <div class="build-stats">
+        <div class="feature-card">
+          <h3>Parts</h3>
+          <p class="stat-value">
+            <%= modifications.length %>
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Installed</h3>
+          <p class="stat-value">
+            <%= installedCount %>
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3>Parts cost</h3>
+          <p class="stat-value">
+            $<%= totalModificationCost.toFixed(2) %>
+          </p>
+        </div>
+      </div>
+
+      <% if (modifications.length === 0) { %>
+
+        <div class="feature-card">
+          <h3>No modifications yet</h3>
+
+          <p>
+            Add your first planned, purchased, or installed part.
+          </p>
+        </div>
+
+      <% } else { %>
+
+        <div class="modification-list">
+
+          <% modifications.forEach((modification) => { %>
+
+            <article class="modification-card">
+
+              <div class="modification-header">
+                <div>
+                  <p class="category">
+                    <%= modification.category %>
+                  </p>
+
+                  <h3>
+                    <%= modification.part_name %>
+                  </h3>
+
+                  <% if (modification.brand) { %>
+                    <p>
+                      <%= modification.brand %>
+                    </p>
+                  <% } %>
+                </div>
+
+                <span
+                  class="status-badge status-<%= modification.status.toLowerCase() %>"
+                >
+                  <%= modification.status %>
+                </span>
+              </div>
+
+              <p class="modification-cost">
+                $<%= Number(modification.cost || 0).toFixed(2) %>
+              </p>
+
+              <% if (modification.notes) { %>
+                <p>
+                  <%= modification.notes %>
+                </p>
+              <% } %>
+
+            </article>
+
+          <% }) %>
+
+        </div>
+
+      <% } %>
+    </section>
+
     <section class="build-actions">
       <a
         href="/builds/<%= build.id %>/edit"
