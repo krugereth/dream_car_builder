@@ -98,27 +98,63 @@ app.post("/builds", (req, res) => {
   });
 });
 
-// View one build
+// View one build and its modifications
 app.get("/builds/:id", (req, res) => {
   const buildId = req.params.id;
 
-  const sql = `
+  const buildSql = `
     SELECT *
     FROM builds
     WHERE id = ?
   `;
 
-  db.get(sql, [buildId], (err, build) => {
+  db.get(buildSql, [buildId], (err, build) => {
     if (err) {
       console.error(err);
-      return res.status(500).send("Database error while loading build.");
+
+      return res
+        .status(500)
+        .send("Database error while loading build.");
     }
 
     if (!build) {
       return res.status(404).send("Build not found.");
     }
 
-    res.render("builds/show", { build });
+    const modificationsSql = `
+      SELECT *
+      FROM modifications
+      WHERE build_id = ?
+      ORDER BY created_at DESC
+    `;
+
+    db.all(modificationsSql, [buildId], (err, modifications) => {
+      if (err) {
+        console.error(err);
+
+        return res
+          .status(500)
+          .send("Database error while loading modifications.");
+      }
+
+      const totalModificationCost = modifications.reduce(
+        (total, modification) => {
+          return total + Number(modification.cost || 0);
+        },
+        0
+      );
+
+      const installedCount = modifications.filter(
+        (modification) => modification.status === "Installed"
+      ).length;
+
+      res.render("builds/show", {
+        build,
+        modifications,
+        totalModificationCost,
+        installedCount,
+      });
+    });
   });
 });
 
@@ -226,5 +262,89 @@ app.delete("/builds/:id", (req, res) => {
     }
 
     res.redirect("/builds");
+  });
+});
+
+// Show form to add a modification
+app.get("/builds/:id/modifications/new", (req, res) => {
+  const buildId = req.params.id;
+
+  const sql = `
+    SELECT *
+    FROM builds
+    WHERE id = ?
+  `;
+
+  db.get(sql, [buildId], (err, build) => {
+    if (err) {
+      console.error(err);
+
+      return res
+        .status(500)
+        .send("Database error while loading build.");
+    }
+
+    if (!build) {
+      return res.status(404).send("Build not found.");
+    }
+
+    res.render("modifications/new", { build });
+  });
+});
+
+// Save a new modification
+app.post("/builds/:id/modifications", (req, res) => {
+  const buildId = req.params.id;
+
+  const {
+    part_name,
+    category,
+    brand,
+    cost,
+    status,
+    notes,
+  } = req.body;
+
+  if (!part_name || !category || !status) {
+    return res
+      .status(400)
+      .send("Part name, category, and status are required.");
+  }
+
+  const sql = `
+    INSERT INTO modifications (
+      build_id,
+      part_name,
+      category,
+      brand,
+      cost,
+      status,
+      notes,
+      created_at
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const values = [
+    buildId,
+    part_name,
+    category,
+    brand || null,
+    cost || 0,
+    status,
+    notes || null,
+    new Date().toISOString(),
+  ];
+
+  db.run(sql, values, function (err) {
+    if (err) {
+      console.error(err);
+
+      return res
+        .status(500)
+        .send("Database error while creating modification.");
+    }
+
+    res.redirect(`/builds/${buildId}`);
   });
 });
