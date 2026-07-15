@@ -392,3 +392,59 @@ app.get("/builds/:buildId/modifications/:modificationId/edit", (req, res) => {
     });
   });
 });
+
+// Update a modification
+app.put("/builds/:buildId/modifications/:modificationId", (req, res) => {
+  const { buildId, modificationId } = req.params;
+
+  const {
+    part_name,
+    category,
+    brand,
+    cost,
+    status,
+    notes,
+  } = req.body;
+
+  if (!part_name || !category || !status) {
+    return res
+      .status(400)
+      .send("Part name, category, and status are required.");
+  }
+
+  const sql = `
+    UPDATE modifications
+    SET
+      part_name = ?,
+      category = ?,
+      brand = ?,
+      cost = ?,
+      status = ?,
+      notes = ?
+    WHERE id = ? AND build_id = ?
+  `;
+
+  const values = [
+    part_name,
+    category,
+    brand || null,
+    cost || 0,
+    status,
+    notes || null,
+    modificationId,
+    buildId,
+  ];
+
+  db.run(sql, values, function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error while updating modification.");
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).send("Modification not found.");
+    }
+
+    res.redirect(`/builds/${buildId}`);
+  });
+});
