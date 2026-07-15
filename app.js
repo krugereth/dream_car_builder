@@ -348,3 +348,47 @@ app.post("/builds/:id/modifications", (req, res) => {
     res.redirect(`/builds/${buildId}`);
   });
 });
+
+// Show form to edit a modification
+app.get("/builds/:buildId/modifications/:modificationId/edit", (req, res) => {
+  const { buildId, modificationId } = req.params;
+
+  const buildSql = `
+    SELECT *
+    FROM builds
+    WHERE id = ?
+  `;
+
+  db.get(buildSql, [buildId], (err, build) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error while loading build.");
+    }
+
+    if (!build) {
+      return res.status(404).send("Build not found.");
+    }
+
+    const modificationSql = `
+      SELECT *
+      FROM modifications
+      WHERE id = ? AND build_id = ?
+    `;
+
+    db.get(modificationSql, [modificationId, buildId], (err, modification) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Database error while loading modification.");
+      }
+
+      if (!modification) {
+        return res.status(404).send("Modification not found.");
+      }
+
+      res.render("modifications/edit", {
+        build,
+        modification,
+      });
+    });
+  });
+});
