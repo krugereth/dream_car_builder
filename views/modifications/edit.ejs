@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Edit Modification | BuildSpec Garage</title>
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a href="/" class="logo">BuildSpec Garage</a>
+
+      <div class="nav-links">
+        <a href="/builds">Builds</a>
+        <a href="/builds/new">New Build</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <a href="/builds/<%= build.id %>" class="back-link">
+      ← Back to build
+    </a>
+
+    <p class="eyebrow">Edit modification</p>
+
+    <h1>Edit part</h1>
+
+    <p class="subtitle">
+      Editing part for:
+      <strong>
+        <%= build.year || "" %>
+        <%= build.make %>
+        <%= build.model %>
+      </strong>
+    </p>
+
+    <form
+      action="/builds/<%= build.id %>/modifications/<%= modification.id %>?_method=PUT"
+      method="POST"
+      class="form-card"
+    >
+      <div class="form-group">
+        <label for="part_name">Part name</label>
+
+        <input
+          type="text"
+          id="part_name"
+          name="part_name"
+          value="<%= modification.part_name %>"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="brand">Brand</label>
+
+          <input
+            type="text"
+            id="brand"
+            name="brand"
+            value="<%= modification.brand || '' %>"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="cost">Cost</label>
+
+          <input
+            type="number"
+            id="cost"
+            name="cost"
+            min="0"
+            step="0.01"
+            value="<%= modification.cost || 0 %>"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Category</label>
+
+          <select id="category" name="category" required>
+            <option value="Engine" <%= modification.category === "Engine" ? "selected" : "" %>>Engine</option>
+            <option value="Exhaust" <%= modification.category === "Exhaust" ? "selected" : "" %>>Exhaust</option>
+            <option value="Suspension" <%= modification.category === "Suspension" ? "selected" : "" %>>Suspension</option>
+            <option value="Wheels & Tires" <%= modification.category === "Wheels & Tires" ? "selected" : "" %>>Wheels & Tires</option>
+            <option value="Brakes" <%= modification.category === "Brakes" ? "selected" : "" %>>Brakes</option>
+            <option value="Exterior" <%= modification.category === "Exterior" ? "selected" : "" %>>Exterior</option>
+            <option value="Interior" <%= modification.category === "Interior" ? "selected" : "" %>>Interior</option>
+            <option value="Electronics" <%= modification.category === "Electronics" ? "selected" : "" %>>Electronics</option>
+            <option value="Other" <%= modification.category === "Other" ? "selected" : "" %>>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+
+          <select id="status" name="status" required>
+            <option value="Planned" <%= modification.status === "Planned" ? "selected" : "" %>>Planned</option>
+            <option value="Purchased" <%= modification.status === "Purchased" ? "selected" : "" %>>Purchased</option>
+            <option value="Installed" <%= modification.status === "Installed" ? "selected" : "" %>>Installed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+
+        <textarea id="notes" name="notes" rows="4"><%= modification.notes || '' %></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary">
+          Save changes
+        </button>
+
+        <a href="/builds/<%= build.id %>" class="btn secondary">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

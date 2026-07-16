@@ -393,3 +393,14 @@ button.btn {
     flex-direction: column;
   }
 }
+
+.modification-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.modification-actions form {
+  margin: 0;
+}
