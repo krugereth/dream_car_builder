@@ -448,3 +448,26 @@ app.put("/builds/:buildId/modifications/:modificationId", (req, res) => {
     res.redirect(`/builds/${buildId}`);
   });
 });
+
+// Delete a modification
+app.delete("/builds/:buildId/modifications/:modificationId", (req, res) => {
+  const { buildId, modificationId } = req.params;
+
+  const sql = `
+    DELETE FROM modifications
+    WHERE id = ? AND build_id = ?
+  `;
+
+  db.run(sql, [modificationId, buildId], function (err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error while deleting modification.");
+    }
+
+    if (this.changes === 0) {
+      return res.status(404).send("Modification not found.");
+    }
+
+    res.redirect(`/builds/${buildId}`);
+  });
+});
