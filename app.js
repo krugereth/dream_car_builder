@@ -137,22 +137,49 @@ app.get("/builds/:id", (req, res) => {
           .send("Database error while loading modifications.");
       }
 
-      const totalModificationCost = modifications.reduce(
-        (total, modification) => {
-          return total + Number(modification.cost || 0);
-        },
-        0
-      );
+              const totalModificationCost = modifications.reduce(
+          (total, modification) => {
+            return total + Number(modification.cost || 0);
+          },
+          0
+        );
 
-      const installedCount = modifications.filter(
-        (modification) => modification.status === "Installed"
-      ).length;
+        const plannedCount = modifications.filter(
+          (modification) => modification.status === "Planned"
+        ).length;
 
-      res.render("builds/show", {
+        const purchasedCount = modifications.filter(
+          (modification) => modification.status === "Purchased"
+        ).length;
+
+        const installedCount = modifications.filter(
+          (modification) => modification.status === "Installed"
+        ).length;
+
+        const totalParts = modifications.length;
+
+        const completionPercentage =
+          totalParts === 0 ? 0 : Math.round((installedCount / totalParts) * 100);
+
+        const buildBudget = Number(build.budget || 0);
+
+        const remainingBudget = buildBudget - totalModificationCost;
+
+        const budgetUsedPercentage =
+          buildBudget === 0
+            ? 0
+            : Math.min(Math.round((totalModificationCost / buildBudget) * 100), 100);
+
+            res.render("builds/show", {
         build,
         modifications,
         totalModificationCost,
+        plannedCount,
+        purchasedCount,
         installedCount,
+        completionPercentage,
+        remainingBudget,
+        budgetUsedPercentage,
       });
     });
   });
